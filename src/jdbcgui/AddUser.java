@@ -1,0 +1,471 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package jdbcgui;
+
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
+/**
+ *
+ * @author usama
+ */
+public class AddUser extends javax.swing.JFrame {
+
+    /**
+     * Creates new form AddUser
+     */
+       myDBCon dbCon;
+       ResultSet rs;
+       
+       
+       
+       public String encrypt (String password){
+          char[] pass = password.toCharArray();
+          
+          password = "";
+          for (char c : pass ){
+              c += 5;
+              password+=c;
+          }
+ 
+          return password;
+       }
+       
+       
+    public AddUser() {
+        initComponents();
+        
+        this.setLocationRelativeTo(null);
+        
+        lbllUserError.setVisible(false);
+        lblPasswordError.setVisible(false);
+        lblNameError.setVisible(false);
+        lblConfrimError.setVisible(false);
+            
+        // populate 
+         try {
+          
+             
+             dbCon = new myDBCon();
+            
+            
+            rs = dbCon.executeStatement("SELECT DISTINCT type FROM loginusers where type < 2 order by type ASC");
+
+            // populate mgr combo box
+            while (rs.next()) {
+                cmbType.addItem(rs.getString("type"));
+            }
+
+            rs.close();
+        } 
+        catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        
+    }
+     public boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+    }
+
+    public boolean isDouble(String s) {
+        try {
+            Double.parseDouble(s);
+            return true;
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+    }
+
+    void clearErrorLabels() {
+        lbllUserError.setText("");
+        lbllUserError.setVisible(false);
+        lblPasswordError.setText("");
+        lblPasswordError.setVisible(false);
+        lblNameError.setText("");
+        lblNameError.setVisible(false);
+        lblConfrimError.setText("");
+        lblConfrimError.setVisible(false);
+        
+    }
+    
+     boolean isValidData() {
+
+        clearErrorLabels();
+        boolean result = true;
+        if (txtUser.getText().trim().isEmpty() || (txtUser.getText().trim()).length() > 25) {
+            if (txtUser.getText().trim().isEmpty()) {
+                lbllUserError.setText("Invalid. Cannot be empty.");
+            } else if ((txtUser.getText().trim().length() > 25)) {
+                lbllUserError.setText("Invalid. Must be < 25 chars.");
+            }
+
+            lbllUserError.setVisible(true);
+            result = false;
+        }
+
+        if (txtPass.getText().trim().isEmpty() || (txtPass.getText().trim().length() > 25)) {
+            if (txtPass.getText().trim().isEmpty()) {
+                lblPasswordError.setText("Invalid. Cannot be empty.");
+            } else if ((txtPass.getText().trim().length() > 10)) {
+                lblPasswordError.setText("Invalid. Must be < 25 chars.");
+            }
+
+            lblPasswordError.setVisible(true);
+            result = false;
+        }
+
+        if (txtConfirmPass.getText().trim().isEmpty() || (txtConfirmPass.getText().trim().length() > 25) || (!txtConfirmPass.getText().equals(txtPass.getText()))) {
+            if (txtConfirmPass.getText().trim().isEmpty()) {
+                lblConfrimError.setText("Invalid. Cannot be empty.");
+            } else if (txtConfirmPass.getText().trim().length() > 25) {  
+                lblConfrimError.setText("Invalid. Must be < 25 chars.");
+            }
+            else if (!txtConfirmPass.getText().equals(txtPass.getText())) {
+                lblConfrimError.setText("Invalid. Does not match the password typed.");
+            }
+            lblConfrimError.setVisible(true);
+            result = false;
+        }
+
+        if (txtName.getText().trim().isEmpty()|| (txtName.getText().trim().length() > 25)) {
+            if (txtName.getText().trim().isEmpty()) {
+            lblNameError.setText("Invalid. Cannot be empty.");
+            }else if (txtName.getText().trim().length() > 25) {
+                lblNameError.setText("Invalid. Must be < 25 chars.");
+            }
+            lblNameError.setVisible(true);
+            result = false;
+        }
+
+        return result;
+    }
+      void clearInputBoxes() {
+        txtUser.setText("");
+        txtName.setText("");
+        txtPass.setText("");
+        txtConfirmPass.setText("");
+        cmbType.setSelectedIndex(0);
+    }
+
+
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        cmbType = new javax.swing.JComboBox<>();
+        txtUser = new javax.swing.JTextField();
+        txtName = new javax.swing.JTextField();
+        showPass = new javax.swing.JCheckBox();
+        showConfirmPass = new javax.swing.JCheckBox();
+        lbllUserError = new javax.swing.JLabel();
+        lblPasswordError = new javax.swing.JLabel();
+        lblConfrimError = new javax.swing.JLabel();
+        lblNameError = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        txtPass = new javax.swing.JPasswordField();
+        txtConfirmPass = new javax.swing.JPasswordField();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        jLabel1.setText("Add New User");
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel2.setText("Username:");
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel3.setText("Password");
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel4.setText("Confirm Password");
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel5.setText("Name");
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel6.setText("Type");
+
+        cmbType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbTypeActionPerformed(evt);
+            }
+        });
+
+        txtUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUserActionPerformed(evt);
+            }
+        });
+
+        showPass.setText("Show Password");
+        showPass.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showPassActionPerformed(evt);
+            }
+        });
+
+        showConfirmPass.setText("Show Password");
+        showConfirmPass.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showConfirmPassActionPerformed(evt);
+            }
+        });
+
+        lbllUserError.setForeground(new java.awt.Color(255, 51, 51));
+        lbllUserError.setText("Error");
+
+        lblPasswordError.setForeground(new java.awt.Color(255, 51, 51));
+        lblPasswordError.setText("Error");
+
+        lblConfrimError.setForeground(new java.awt.Color(255, 51, 51));
+        lblConfrimError.setText("Error");
+
+        lblNameError.setForeground(new java.awt.Color(255, 51, 51));
+        lblNameError.setText("Error");
+
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jButton1.setText("Add New User");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(145, 145, 145)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(100, 100, 100)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(20, 20, 20)
+                                .addComponent(cmbType, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(81, 81, 81))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel5))
+                                .addGap(37, 37, 37)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtUser)
+                                    .addComponent(txtName)
+                                    .addComponent(txtPass)
+                                    .addComponent(txtConfirmPass, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lbllUserError)
+                                    .addComponent(lblNameError)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(showPass, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(showConfirmPass)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(lblConfrimError)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblPasswordError)))))))
+                .addContainerGap(112, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbllUserError))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel3)
+                        .addComponent(lblPasswordError))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(showPass, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                .addGap(18, 18, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(showConfirmPass)
+                    .addComponent(lblConfrimError)
+                    .addComponent(txtConfirmPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblNameError))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6)
+                    .addComponent(cmbType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(16, 16, 16)
+                .addComponent(jButton1)
+                .addGap(19, 19, 19))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void cmbTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTypeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbTypeActionPerformed
+
+    private void txtUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUserActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtUserActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        
+        try {
+            // make the result set scrolable forward/backward updatable
+            
+
+            if (isValidData()) {
+                
+               
+                
+                String prepSQL = "INSERT INTO loginusers (username, password, name, type) VALUES (" +
+                " '" + txtUser.getText()+"', "+
+                " '"+ encrypt(txtPass.getText())+"', "+
+                " '"+ txtName.getText()+"', "+
+                cmbType.getSelectedItem()+")";
+                int result = dbCon.executePrepared(prepSQL);
+                if (result > 0) {
+
+                    javax.swing.JLabel label = new javax.swing.JLabel("New User added successfully.");
+                    label.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 18));
+                    JOptionPane.showMessageDialog(null, label, "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
+
+                    clearInputBoxes();
+                } else {
+                    // check validation errors 
+                }
+
+                rs.close();
+            } else {
+
+                javax.swing.JLabel label = new javax.swing.JLabel("Please fix validation errors...");
+                label.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 18));
+                JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.ERROR_MESSAGE);
+
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error adding new user."+ e.getMessage());
+       
+        }
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void showConfirmPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showConfirmPassActionPerformed
+        // TODO add your handling code here:
+        if(showConfirmPass.isSelected()){
+            txtConfirmPass.setEchoChar((char)0);
+        }
+        else {
+            txtConfirmPass.setEchoChar('*');
+        }
+    }//GEN-LAST:event_showConfirmPassActionPerformed
+
+    private void showPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showPassActionPerformed
+        // TODO add your handling code here
+        if(showPass.isSelected()){
+            txtPass.setEchoChar((char)0);
+        }
+        else {
+            txtPass.setEchoChar('*');
+        }
+    }//GEN-LAST:event_showPassActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(AddUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(AddUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(AddUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(AddUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new AddUser().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> cmbType;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel lblConfrimError;
+    private javax.swing.JLabel lblNameError;
+    private javax.swing.JLabel lblPasswordError;
+    private javax.swing.JLabel lbllUserError;
+    private javax.swing.JCheckBox showConfirmPass;
+    private javax.swing.JCheckBox showPass;
+    private javax.swing.JPasswordField txtConfirmPass;
+    private javax.swing.JTextField txtName;
+    private javax.swing.JPasswordField txtPass;
+    private javax.swing.JTextField txtUser;
+    // End of variables declaration//GEN-END:variables
+}
